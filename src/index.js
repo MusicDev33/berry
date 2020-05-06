@@ -39,23 +39,11 @@ const crawler = new Crawler({
       $('a').get().map(element => $(element).attr('href')).forEach(link => {
         const processedLink = processor.process(link);
         if (processedLink) {
-          const saveLink = Link({
-            href: 'https://www.reddit.com' + link
-          });
-
-          Link.findOne({href: link}, (err, doc) => {
-            if (doc) {
-              done();
-            } else {
-              saveLink.save((err) => {
-                console.log(totalLinks.length);
-                const link = totalLinks[0];
-                totalLinks.shift();
-
-                newCrawl(link);
-              });
-            }
-          });
+          const saveLink = Link({ href: 'https://www.reddit.com' + link });
+          await foundLink = Link.findOne({href: link});
+          if (foundLink) {
+            done();
+          }
         }
       });
     }
